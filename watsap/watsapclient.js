@@ -1,10 +1,22 @@
-// En tu archivo ../watsap/watsapclient.js
 const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 
-// Crear cliente y guardar sesión localmente
+// Crear cliente con configuración para servidor Linux
 const client = new Client({
-    authStrategy: new LocalAuth()
+    authStrategy: new LocalAuth(),
+    puppeteer: { 
+        executablePath: '/usr/bin/chromium-browser',
+        args: [
+            '--no-sandbox', 
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-accelerated-2d-canvas',
+            '--no-first-run',
+            '--no-zygote',
+            '--single-process',
+            '--disable-gpu'
+        ]
+    }
 });
 
 // Evento QR
@@ -58,4 +70,5 @@ const sendWhatsApp = async (numero, mensaje, imagePath = null) => {
         throw error;
     }
 };
+
 module.exports = { client, sendWhatsApp };
